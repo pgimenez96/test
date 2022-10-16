@@ -48,9 +48,9 @@ public class ApiUtil {
     }
 
     // Consulta y retorna archivo en array de bytes de la URL que recibe por parámetro
-    public static byte[] getImageFromNetByUrl(String strUrl) throws Exception {  
+    public static byte[] getImageFromNetByUrl(String urlString) throws Exception {  
         try {  
-            URL url = new URL(strUrl);  
+            URL url = new URL(urlString);  
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();  
             conn.setRequestMethod("GET");  
             conn.setConnectTimeout(300000);
@@ -58,7 +58,7 @@ public class ApiUtil {
             InputStream inStream = conn.getInputStream();
             return readInputStream(inStream);
         } catch (Exception e) {  
-            throw new Exception("No se pudo obtener imagen de la ruta " + strUrl);
+            throw new Exception("No se pudo obtener imagen de la ruta " + urlString);
         }  
     }
 
