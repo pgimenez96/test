@@ -22,6 +22,8 @@ mvn spring-boot:run
 
 ## Para invocar a la API desarrollada
 
+Para probar la API mediante Swagger UI se debe levantar el proyecto e ingresar al siguiente URL: http://localhost:8080/swagger-ui.html
+
  - Método: GET
  - Request URL: http://localhost:8080/api/consulta?q=odesur&f=true
     - q: texto de busqueda, es parámetro requerido para invocar a la API.
