@@ -11,22 +11,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pgimenez.test.api.dto.ApiResponseDto;
 import com.pgimenez.test.api.service.ApiService;
 
-@RestController("ApiController")
+@RestController("apiController")
 @RequestMapping("/api")
-public class ApiControllerImpl implements ApiController{
+public class ApiControllerImpl implements ApiController {
 
-    @Autowired
     private ApiService service;
+    
+    @Autowired
+    public ApiControllerImpl(ApiService service) {
+        this.service = service;
+    }
     
     @Override
     @GetMapping(value = "/consulta")
     public List<ApiResponseDto> searchPost(
             @RequestParam(value = "q", required = false) String searchData,
-            @RequestParam(value = "f", required = false) boolean returnPhoto
+            @RequestParam(value = "f", required = true) boolean returnPhoto
         ) throws Exception {
-
         return service.getPosts(searchData, returnPhoto);
-
     }
 
 }

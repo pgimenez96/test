@@ -20,7 +20,7 @@ import com.pgimenez.test.api.exception.ApiException;
 import com.pgimenez.test.api.exception.ApiExceptionHandler;
 import com.pgimenez.test.api.util.ApiUtil;
 
-@Service("ApiService")
+@Service("apiService")
 public class ApiServiceImpl implements ApiService {
 
     private static final Logger log = LoggerFactory.getLogger(ApiServiceImpl.class);

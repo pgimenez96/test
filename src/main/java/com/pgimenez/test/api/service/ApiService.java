@@ -3,6 +3,7 @@ package com.pgimenez.test.api.service;
 import java.util.List;
 
 import com.pgimenez.test.api.dto.ApiResponseDto;
+import com.pgimenez.test.api.exception.ApiException;
 
 public interface ApiService {
     
@@ -11,6 +12,6 @@ public interface ApiService {
      * @param searchData Texto de busqueda
      * @return Lista de las noticias encontradas en formato JSON
      */
-    public List<ApiResponseDto> getPosts(String searchData, boolean returnPhoto) throws Exception;
+    public List<ApiResponseDto> getPosts(String searchData, boolean returnPhoto) throws ApiException;
 
 }
