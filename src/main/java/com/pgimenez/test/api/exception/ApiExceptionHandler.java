@@ -6,9 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.pgimenez.test.api.dto.ApiExceptionResponse;
 
 /**
@@ -49,6 +53,25 @@ public class ApiExceptionHandler {
         log.error("Api exception: {}", ex.getMessage());
         ApiExceptionResponse response = new ApiExceptionResponse(ex.getCode(), getErrorMessageForErrorCode(ex.getCode()));
         return new ResponseEntity<>(response, getHttpStatusForErrorCode(ex.getCode()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        Throwable mostSpecificCause = ex.getMostSpecificCause();
+        if (mostSpecificCause instanceof JsonMappingException) {
+            JsonMappingException jsonMappingException = (JsonMappingException) mostSpecificCause;
+            String fieldName = jsonMappingException.getPath().stream()
+                .map(Reference::getFieldName)
+                .reduce((first, second) -> first + ", " + second)
+                .orElse("Unknown Field");
+            String msgException = ex.getMessage();
+            String msg = (msgException != null && msgException.contains("not one of the values accepted for Enum class"))
+                ? "Valor no válido para el campo '" + fieldName + "'."
+                : "Error de formato en el campo '" + fieldName + "'.";
+            return new ResponseEntity<>(new ApiExceptionResponse(G100, msg), HttpStatus.BAD_REQUEST);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse(G100, "La solicitud contiene un formato no válido");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     // Retorna estado HTTP según el código del error
